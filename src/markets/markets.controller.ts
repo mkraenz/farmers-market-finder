@@ -17,7 +17,6 @@ export class MarketsController {
 
   @Post()
   create(@Body() dto: CreateMarketDto) {
-    debugger;
     return this.markets.create(dto);
   }
 

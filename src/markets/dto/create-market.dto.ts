@@ -5,6 +5,7 @@ const CreateMarketSchema = z.object({
   address: z.string(),
   city: z.string(),
   state: z.string(),
+  country: z.string(),
   location: z.object({
     lat: z.number().min(-90).max(90),
     long: z.number().min(-180).max(180),

@@ -38,3 +38,18 @@ Get markets near me -> Endpoint `GET /markets?lat=23.45&lng=34.56&radius=10`
 where `lat` and `lng` are the user's current location and radius is the maximum distance in kilometers.
 
 Returns a list of markets within the radius sorted by distance from the user's location.
+
+## Migrations
+
+From [TypeORM docs Using CLI](https://orkhan.gitbook.io/typeorm/docs/using-cli)
+
+```sh
+# autogenerate migration ./migrations/<timestamp>-mymigration.ts
+npm run typeorm:generate-migration --name=mymigration
+
+# run migration
+npm run typeorm:run-migrations
+
+# revert migration
+npm run typeorm:revert-migration
+```

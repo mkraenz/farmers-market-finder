@@ -9,23 +9,23 @@ export class Market {
   address!: string;
 
   @Column()
-  city: string;
+  city!: string;
 
   @Column()
-  state: string;
+  state!: string;
 
   @Column()
-  country: string;
+  country!: string;
 
   @Column({ type: 'jsonb' })
-  location: {
+  location!: {
     lat: number;
     long: number;
   };
 
   @Column()
-  zip: string;
+  zip!: string;
 
   @Column('text', { array: true, default: [] })
-  products: string[];
+  products!: string[];
 }
