@@ -11,12 +11,14 @@ const schema = z.object({
     long: z.number(),
   }),
   zip: z.string(),
+  country: z.string(),
   products: z.array(z.string()),
 });
 
 export class GetMarketDto {
   static fromEntity(entity: Market) {
     const result = schema.safeParse(entity);
-    return result;
+    if (!result.success) throw new Error(result.error.message);
+    return result.data;
   }
 }

@@ -14,8 +14,7 @@ export class MarketsService {
 
   async create(dto: CreateMarketDto) {
     const market = this.markets.create(dto);
-    const savedMarket = await this.markets.save(market);
-    return savedMarket;
+    return this.markets.save(market);
   }
 
   findAll() {
@@ -26,8 +25,11 @@ export class MarketsService {
     return this.markets.findOneBy({ id });
   }
 
-  update(id: string, dto: UpdateMarketDto) {
-    return `This action updates a #${id} market`;
+  async update(id: string, dto: UpdateMarketDto) {
+    const market = await this.markets.findOneBy({ id });
+    if (!market) return null;
+    const updatedMarket = this.markets.merge(market, dto);
+    return this.markets.save(updatedMarket);
   }
 
   async remove(id: string) {
