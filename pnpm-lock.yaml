@@ -12,6 +12,7 @@ specifiers:
   '@nestjs/testing': ^9.0.0
   '@nestjs/typeorm': ^9.0.1
   '@types/express': ^4.17.13
+  '@types/geojson': ^7946.0.10
   '@types/jest': 29.5.1
   '@types/node': 18.16.12
   '@types/supertest': ^2.0.11
@@ -45,6 +46,7 @@ dependencies:
   '@nestjs/platform-express': 9.4.2_esprltrbpiguxawrkfzeze6eae
   '@nestjs/swagger': 6.3.0_m4rfsou2biq6cx2f4sztxeoucm
   '@nestjs/typeorm': 9.0.1_gx5h54biaunejthunmog434vuy
+  '@types/geojson': 7946.0.10
   dotenv: 16.0.3
   nestjs-zod: 2.3.2_fdkohmuf6v2wwdp5cstylnbwti
   pg: 8.11.0
@@ -1225,6 +1227,10 @@ packages:
       '@types/qs': 6.9.7
       '@types/serve-static': 1.15.1
     dev: true
+
+  /@types/geojson/7946.0.10:
+    resolution: {integrity: sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==}
+    dev: false
 
   /@types/graceful-fs/4.1.6:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}

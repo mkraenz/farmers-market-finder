@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { CreateMarketDto } from './dto/create-market.dto';
 import { UpdateMarketDto } from './dto/update-market.dto';
-import { Market } from './entities/market.entity';
+import { MarketRepository } from './markets.repository';
 
 @Injectable()
 export class MarketsService {
-  constructor(
-    @InjectRepository(Market)
-    private markets: Repository<Market>,
-  ) {}
+  constructor(private markets: MarketRepository) {}
 
   async create(dto: CreateMarketDto) {
     const market = this.markets.create(dto);
@@ -18,7 +13,13 @@ export class MarketsService {
   }
 
   findAll() {
-    return this.markets.find();
+    return this.markets.findNearby({
+      lat: 12.34,
+      long: 23.45,
+      radius: 5000,
+      limit: 10,
+    });
+    // return this.markets.find();
   }
 
   findOne(id: string) {

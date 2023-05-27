@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Point, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Market {
@@ -22,6 +22,9 @@ export class Market {
     lat: number;
     long: number;
   };
+
+  @Column('geometry', { nullable: true })
+  point: Point | null = null;
 
   @Column()
   zip!: string;

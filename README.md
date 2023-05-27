@@ -65,6 +65,10 @@ npm run typeorm:revert-migration
 
 ## Handling Geolocation data with PostGIS
 
+## With TypeORM
+
+see [docs](https://orkhan.gitbook.io/typeorm/docs/entities#spatial-columns)
+
 ### Installing PostGIS manually
 
 Note: This is only for reference since we switched to a postgis docker image.

@@ -41,6 +41,10 @@ describe('/markets/', () => {
         lat: 12.34,
         long: 23.45,
       },
+      point: {
+        type: 'Point',
+        coordinates: [12.34, 23.45],
+      },
       products: ['Cheese', 'Dairy', 'Textile', 'Flax'],
       state: 'PA',
       zip: '12345',
@@ -73,6 +77,10 @@ describe('/markets/', () => {
         lat: 12.34,
         long: 23.45,
       },
+      point: {
+        type: 'Point',
+        coordinates: [12.34, 23.45],
+      },
       products: ['Cheese', 'Dairy', 'Textile', 'Flax'],
       state: 'PA',
       zip: '12345',
@@ -99,6 +107,10 @@ describe('/markets/', () => {
         lat: 12.34,
         long: 23.45,
       },
+      point: {
+        type: 'Point',
+        coordinates: [12.34, 23.45],
+      },
       products: ['Cheese', 'Dairy', 'Textile', 'Flax'],
       state: 'PA',
       zip: '12345',
@@ -110,6 +122,10 @@ describe('/markets/', () => {
       location: {
         lat: 34.56,
         long: 45.67,
+      },
+      point: {
+        type: 'Point',
+        coordinates: [34.56, 45.67],
       },
       // explicitly not updating country to test that it is not updated but we still get it back
       products: ['Jewelry', 'Accessory'],

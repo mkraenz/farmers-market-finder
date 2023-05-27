@@ -11,7 +11,6 @@ async function bootstrap() {
     .setTitle('Market Finder API')
     .setDescription('Find local farmers market')
     .setVersion('1.0')
-    .addTag('markets')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

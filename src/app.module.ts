@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Environment } from './environment';
 import { MarketsModule } from './markets/markets.module';
@@ -38,7 +37,6 @@ import { MarketsModule } from './markets/markets.module';
     }),
     MarketsModule,
   ],
-  controllers: [AppController],
   providers: [
     {
       provide: APP_PIPE,

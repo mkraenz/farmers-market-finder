@@ -1,3 +1,4 @@
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { Market } from '../entities/market.entity';
 
@@ -15,7 +16,7 @@ const schema = z.object({
   products: z.array(z.string()),
 });
 
-export class GetMarketDto {
+export class GetMarketDto extends createZodDto(schema) {
   static fromEntity(entity: Market) {
     const result = schema.safeParse(entity);
     if (!result.success) throw new Error(result.error.message);
