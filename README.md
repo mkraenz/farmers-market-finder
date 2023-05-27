@@ -3,7 +3,7 @@
 ## Stories
 
 - [x] As a market owner, I want to add my market to the list, so that I can attract more customers.
-- [ ] As a user, I want to find markets near me, so that I can buy fresh produce.
+- [x] As a user, I want to find markets near me, so that I can buy fresh produce.
 - [ ] As a market owner, I want to upload images of my market, so that I can attract more customers.
 
 ## Requirements

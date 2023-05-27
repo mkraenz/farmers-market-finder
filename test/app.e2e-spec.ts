@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { CreateMarketDto } from '../src/markets/dto/create-market.dto';
-import { UpdateMarketDto } from '../src/markets/dto/update-market.dto';
+import { CreateMarketApiInput } from '../src/markets/dto/create-market.dto';
+import { UpdateMarketApiInput } from '../src/markets/dto/update-market.dto';
 import { AppModule } from './../src/app.module';
 
 const uuidv4 =
@@ -23,27 +23,16 @@ afterAll(async () => {
   await app.close();
 });
 
-it('/ (GET)', () => {
-  return request(app.getHttpServer())
-    .get('/')
-    .expect(200)
-    .expect('Hello World!');
-});
-
 describe('/markets/', () => {
   const markets = '/markets/';
   it('POST creates a new market and GET it', async () => {
-    const reqBody: CreateMarketDto = {
+    const reqBody: CreateMarketApiInput = {
       address: 'Sesame Street 12',
       city: 'Philadelphia',
       country: 'US',
       location: {
         lat: 12.34,
         long: 23.45,
-      },
-      point: {
-        type: 'Point',
-        coordinates: [12.34, 23.45],
       },
       products: ['Cheese', 'Dairy', 'Textile', 'Flax'],
       state: 'PA',
@@ -69,17 +58,13 @@ describe('/markets/', () => {
   });
 
   it('DELETE deletes a market and validates it cannot be GET anymore', async () => {
-    const reqBody: CreateMarketDto = {
+    const reqBody: CreateMarketApiInput = {
       address: 'Sesame Street 12',
       city: 'Philadelphia',
       country: 'US',
       location: {
         lat: 12.34,
         long: 23.45,
-      },
-      point: {
-        type: 'Point',
-        coordinates: [12.34, 23.45],
       },
       products: ['Cheese', 'Dairy', 'Textile', 'Flax'],
       state: 'PA',
@@ -99,7 +84,7 @@ describe('/markets/', () => {
   });
 
   it('PATCH updates a market', async () => {
-    const reqBody: CreateMarketDto = {
+    const reqBody: CreateMarketApiInput = {
       address: 'Sesame Street 12',
       city: 'Philadelphia',
       country: 'US',
@@ -107,25 +92,17 @@ describe('/markets/', () => {
         lat: 12.34,
         long: 23.45,
       },
-      point: {
-        type: 'Point',
-        coordinates: [12.34, 23.45],
-      },
       products: ['Cheese', 'Dairy', 'Textile', 'Flax'],
       state: 'PA',
       zip: '12345',
     };
 
-    const updateBody: UpdateMarketDto = {
+    const updateBody: UpdateMarketApiInput = {
       address: 'Baker Street 221B',
       city: 'London',
       location: {
         lat: 34.56,
         long: 45.67,
-      },
-      point: {
-        type: 'Point',
-        coordinates: [34.56, 45.67],
       },
       // explicitly not updating country to test that it is not updated but we still get it back
       products: ['Jewelry', 'Accessory'],

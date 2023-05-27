@@ -9,9 +9,17 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CreateMarketDto } from './dto/create-market.dto';
+import { FindNearestMarketsDto } from './dto/find-nearest-markets.dto';
 import { GetMarketDto } from './dto/get-market.dto';
 import { UpdateMarketDto } from './dto/update-market.dto';
 import { MarketsService } from './markets.service';
@@ -28,9 +36,35 @@ export class MarketsController {
   }
 
   @Get()
-  @ApiOkResponse({ type: [GetMarketDto] })
-  async findAll() {
-    const markets = await this.markets.findAll();
+  @ApiExtraModels(FindNearestMarketsDto)
+  // @ApiQuery({
+  //   name: 'lat',
+  //   type: Number,
+  //   description:
+  //     'Latitude of coordinate in which area you want to search. If provided, also long is required',
+  // })
+  // @ApiQuery({ name: 'long', type: Number })
+  // @ApiQuery({ name: 'radiusinkm', type: Number, required: false })
+  // @ApiQuery({ name: 'limit', type: Number, required: false })
+  @ApiQuery({
+    required: true,
+    name: 'queryParams',
+    explode: true,
+    type: 'object',
+    schema: {
+      $ref: getSchemaPath(FindNearestMarketsDto),
+    },
+  })
+  @ApiOkResponse({
+    type: [GetMarketDto],
+    description:
+      'Returns markets around the given coordinates, sorted by closest first. Markets additionally have the property "distance" set.',
+  })
+  async findMany(@Query() queryParams: FindNearestMarketsDto) {
+    if (queryParams instanceof FindNearestMarketsDto) {
+      console.log('queryParams is instance of FindNearestMarketsDto');
+    }
+    const markets = await this.markets.findMany(queryParams);
     return markets.map(GetMarketDto.fromEntity);
   }
 

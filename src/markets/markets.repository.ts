@@ -11,34 +11,30 @@ export class MarketRepository extends Repository<Market> {
   async findNearby({
     lat,
     long,
-    radius,
+    radiusInKm: radius,
     limit,
   }: {
     lat: number;
     long: number;
-    radius: number;
+    radiusInKm: number;
     limit: number;
   }): Promise<Market[]> {
-    const result = await this.createQueryBuilder()
+    const alias = 'market';
+    const result = await this.createQueryBuilder(alias)
+      // WORKAROUND for virtual property market.distance
+      // inspired by first solution in https://pietrzakadrian.com/blog/virtual-column-solutions-for-typeorm
+      .addSelect(
+        'ST_DistanceSphere(location, ST_MakePoint(:long, :lat)) / 1000',
+        `${alias}_distance`, // must be prefixed with entity alias
+      )
       .where(
-        'ST_DistanceSphere(point, ST_MakePoint(:long, :lat)) <= :radius * 1000',
+        'ST_DistanceSphere(location, ST_MakePoint(:long, :lat)) <= :radius * 1000',
         { lat, long, radius },
       )
-      .orderBy('ST_DistanceSphere(point, ST_MakePoint(:long, :lat))', 'ASC')
+      .orderBy('ST_DistanceSphere(location, ST_MakePoint(:long, :lat))', 'ASC')
       .limit(limit)
-      .getMany();
-    return result;
-    // const result = await this.createQueryBuilder()
-    //   .where(
-    //     `
-    //     SELECT *, ST_DistanceSphere(location, ST_MakePoint(:long, :lat)) as distance
-    //     FROM market
-    //     WHERE ST_DistanceSphere(location, ST_MakePoint(:long, :lat)) <= :radius * 1000
-    //     ORDER BY distance
-    //     LIMIT :limit
-    //     `,
-    //     { lat, long, radius, limit },
-    //   )
-    //   .getManyAndCount();
+      .getRawAndEntities();
+    // TODO #1 can i get rid of raw now?
+    return result.entities;
   }
 }

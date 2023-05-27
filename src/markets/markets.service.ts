@@ -12,14 +12,14 @@ export class MarketsService {
     return this.markets.save(market);
   }
 
-  findAll() {
-    return this.markets.findNearby({
-      lat: 12.34,
-      long: 23.45,
-      radius: 5000,
-      limit: 10,
-    });
-    // return this.markets.find();
+  findMany(options?: {
+    lat: number;
+    long: number;
+    radiusInKm: number;
+    limit: number;
+  }) {
+    if (options) return this.markets.findNearby(options);
+    return this.markets.find();
   }
 
   findOne(id: string) {

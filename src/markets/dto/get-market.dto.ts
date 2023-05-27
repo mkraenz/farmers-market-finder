@@ -14,11 +14,21 @@ const schema = z.object({
   zip: z.string(),
   country: z.string(),
   products: z.array(z.string()),
+  distance: z.number().optional().describe('Distance in kilometers'),
 });
+type Schema = z.infer<typeof schema>;
 
 export class GetMarketDto extends createZodDto(schema) {
   static fromEntity(entity: Market) {
-    const result = schema.safeParse(entity);
+    const data: Schema = {
+      ...entity,
+      distance: entity.distance ?? undefined,
+      location: {
+        lat: entity.location.coordinates[1],
+        long: entity.location.coordinates[0],
+      },
+    };
+    const result = schema.safeParse(data);
     if (!result.success) throw new Error(result.error.message);
     return result.data;
   }

@@ -11,11 +11,11 @@ const CreateMarketSchema = z.object({
       lat: z.number().min(-90).max(90).describe('latitude'),
       long: z.number().min(-180).max(180).describe('longitude'),
     })
+    .transform((data) => ({
+      type: 'Point' as const,
+      coordinates: [data.long, data.lat],
+    }))
     .describe('GPS coordinates'),
-  point: z.object({
-    type: z.enum(['Point']),
-    coordinates: z.tuple([z.number(), z.number()]),
-  }),
   zip: z.string().min(5).max(5).describe('postal code'),
   products: z
     .array(z.string())
@@ -26,3 +26,13 @@ const CreateMarketSchema = z.object({
 });
 
 export class CreateMarketDto extends createZodDto(CreateMarketSchema) {}
+
+type Schema = z.infer<typeof CreateMarketSchema>;
+export type CreateMarketApiInput = {
+  [key in keyof Omit<Schema, 'location'>]: Schema[key];
+} & {
+  location: {
+    lat: number;
+    long: number;
+  };
+};
