@@ -42,11 +42,18 @@ Returns a list of markets within the radius sorted by distance from the user's l
 
 #### Todos
 
-- [ ] Install Postgres PostGIS extension
-- [ ] Learn the basics of PostGIS
-- [ ] redo `market.location` with PostGIS
-- [ ] calculate distance between user and market
-- [ ] endpoint to get markets near user
+- [x] Install Postgres PostGIS extension
+- [x] Learn the basics of PostGIS
+- [x] redo `market.location` with PostGIS
+- [x] calculate distance between user and market
+- [x] endpoint to get markets near user
+
+#### As a market owner, I want to upload images of my market, so that I can attract more customers
+
+- [x] basic connection to S3 from nestjs
+- [ ] upload image to S3 within server
+- [ ] file upload endpoint to upload image to S3
+- [ ] store image urls in Market entity
 
 ## Migrations
 
