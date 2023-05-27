@@ -1,0 +1,12 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "farmers-market"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1jub5ykce0thl"
+s3_prefix = "farmers-market"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_NAMED_IAM"
+parameter_overrides = "Example=\"Example\""
+image_repositories = []

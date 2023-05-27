@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Infrastructure for the Farmers Market Finder application
+
+Parameters:
+  Example:
+    Type: String
+    Default: 'Example'
+
+Resources:
+  FileStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: farmers-market-mk
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - '*'
+            AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+            MaxAge: 3000
+      Tags: [{ Key: 'project', Value: 'Farmers Market Finder' }]
+
+  # BucketPolicy:
+  #   Type: AWS::S3::BucketPolicy
+  #   Properties:
+  #     Bucket: !Ref FileStorage
+  #     PolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #         - Sid: PublicReadGetObject
+  #           Effect: Allow
+  #           Principal: '*'
+  #           Action: s3:GetObject
+  #           Resource: !Sub 'arn:aws:s3:::${FileStorage}/*'
+
+  WriteToFileStorageUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: farmers-market-to-s3
+      Policies:
+        - PolicyName: s3-write-access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  # TODO convert to !Sub
+                Resource: !Join ['', ['arn:aws:s3:::', !Ref FileStorage, '/*']]
+
+  FileStorageUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref WriteToFileStorageUser
+      Status: Active
+
+Outputs:
+  BucketName:
+    Value: !Ref FileStorage
+  FileStorageUserAccessKeyId:
+    Value: !Ref FileStorageUserAccessKey
+  FileStorageUserSecretAccessKey:
+    Value: !GetAtt FileStorageUserAccessKey.SecretAccessKey
