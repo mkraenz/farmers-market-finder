@@ -13,10 +13,8 @@ export type Market = {
   country: string;
   products: string[];
   distance?: number | undefined;
-  images?:
-    | {
-        url: string;
-        description: string;
-      }[]
-    | undefined;
+  images: {
+    url: string;
+    description: string;
+  }[];
 };
