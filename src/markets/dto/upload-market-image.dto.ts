@@ -1,11 +1,16 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
 
-const UploadMarketImageSchema = z.object({
-  marketId: z.string().uuid(),
+const UploadMarketImageBodySchema = z.object({
   imageDescription: z.string().max(255),
 });
 
-export class UploadMarketImageDto extends createZodDto(
-  UploadMarketImageSchema,
+export class UploadMarketImageBodyDto extends createZodDto(
+  UploadMarketImageBodySchema,
+) {}
+
+export class UploadMarketImageParamDto extends createZodDto(
+  z.object({
+    id: z.string().uuid(),
+  }),
 ) {}

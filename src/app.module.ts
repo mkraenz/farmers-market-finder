@@ -5,7 +5,6 @@ import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
-import { AppService } from './app.service';
 import { Environment } from './environment';
 import { MarketsModule } from './markets/markets.module';
 import { S3Module } from './s3/s3.module';
@@ -46,7 +45,6 @@ const typeormConfig: TypeOrmModuleAsyncOptions = {
       provide: APP_PIPE,
       useClass: ZodValidationPipe,
     },
-    AppService,
   ],
 })
 export class AppModule {}

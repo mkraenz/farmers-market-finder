@@ -4,7 +4,7 @@
 
 - [x] As a market owner, I want to add my market to the list, so that I can attract more customers.
 - [x] As a user, I want to find markets near me, so that I can buy fresh produce.
-- [ ] As a market owner, I want to upload images of my market, so that I can attract more customers.
+- [x] As a market owner, I want to upload images of my market, so that I can attract more customers.
 
 ## Requirements
 
@@ -40,7 +40,7 @@ where `lat` and `long` are the user's current location and radius is the maximum
 
 Returns a list of markets within the radius sorted by distance from the user's location.
 
-#### Todos
+#### Tasks
 
 - [x] Install Postgres PostGIS extension
 - [x] Learn the basics of PostGIS
@@ -54,7 +54,7 @@ Returns a list of markets within the radius sorted by distance from the user's l
 - [x] upload image to S3 within server
 - [x] file upload endpoint to upload image to S3
 - [x] store image urls in Market entity
-  - [ ] cleanup code incl move to `POST /markets/:id/image-upload`
+  - [x] cleanup code incl move to `POST /markets/:id/image-upload`
 - [x] users can get image urls from market
 - [ ] (optional) redo everything using pre-signed URLs
 

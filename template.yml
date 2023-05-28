@@ -58,9 +58,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - s3:PutObject
-                  - s3:PutObjectAcl
-                  # TODO convert to !Sub
-                Resource: !Join ['', ['arn:aws:s3:::', !Ref FileStorage, '/*']]
+                Resource: !Sub 'arn:aws:s3:::${FileStorage}/*'
 
   FileStorageUserAccessKey:
     Type: AWS::IAM::AccessKey

@@ -33,8 +33,7 @@ export class MarketRepository extends Repository<Market> {
       )
       .orderBy('ST_DistanceSphere(location, ST_MakePoint(:long, :lat))', 'ASC')
       .limit(limit)
-      .getRawAndEntities();
-    // TODO #1 can i get rid of raw now?
-    return result.entities;
+      .getMany();
+    return result;
   }
 }

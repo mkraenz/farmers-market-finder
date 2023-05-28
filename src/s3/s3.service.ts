@@ -11,8 +11,7 @@ export class S3Service {
   private bucket: string;
   private region: string;
 
-  constructor(private cfg: ConfigService<Environment, true>) {
-    // region: string, // credentials: { accessKeyId: string; secretAccessKey: string },
+  constructor(cfg: ConfigService<Environment, true>) {
     const credentials = {
       accessKeyId: cfg.get('AWS_ACCESS_KEY_ID'),
       secretAccessKey: cfg.get('AWS_SECRET_ACCESS_KEY'),
@@ -25,36 +24,18 @@ export class S3Service {
     });
   }
 
-  async listBuckets() {
-    try {
-      const command = new S3.ListBucketsCommand({});
-      const data = await this.client.send(command);
-      logger.log(JSON.stringify(data, null, 2));
-      return data.Buckets;
-    } catch (error) {
-      logger.error(error);
-    }
-  }
-
   /** TODO the whole Nestjs-as-proxy-to-S3 for uploads can be avoided by using presigned URLs https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html */
   async putImage(key: string, body: string | Buffer) {
-    try {
-      const command = new S3.PutObjectCommand({
-        Bucket: this.bucket,
-        Key: key,
-        Body: body,
-        ContentEncoding: 'base64',
-        ContentType: 'image/jpeg',
-      });
-      const res = await this.client.send(command);
-      const region = this.region === 'us-east-1' ? '' : `-${this.region}`;
-      const url = `https://s3${region}.amazonaws.com/${this.bucket}/${key}`;
-      logger.log(JSON.stringify(res, null, 2));
-      logger.log({ url, key });
-      return { url, key };
-    } catch (error) {
-      logger.error(error);
-      throw error;
-    }
+    const command = new S3.PutObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+      Body: body,
+      ContentEncoding: 'base64',
+      ContentType: 'image/jpeg',
+    });
+    await this.client.send(command);
+    const region = this.region === 'us-east-1' ? '' : `-${this.region}`;
+    const url = `https://s3${region}.amazonaws.com/${this.bucket}/${key}`;
+    return { url, key };
   }
 }

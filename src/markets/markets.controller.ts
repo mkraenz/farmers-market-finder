@@ -28,7 +28,10 @@ import { CreateMarketDto } from './dto/create-market.dto';
 import { FindNearestMarketsDto } from './dto/find-nearest-markets.dto';
 import { GetMarketDto } from './dto/get-market.dto';
 import { UpdateMarketDto } from './dto/update-market.dto';
-import { UploadMarketImageDto } from './dto/upload-market-image.dto';
+import {
+  UploadMarketImageBodyDto,
+  UploadMarketImageParamDto,
+} from './dto/upload-market-image.dto';
 import { MarketsService } from './markets.service';
 
 const oneMegabyteInBytes = 1024 * 1024;
@@ -62,7 +65,8 @@ export class MarketsController {
   })
   async findMany(@Query() queryParams: FindNearestMarketsDto) {
     if (queryParams instanceof FindNearestMarketsDto) {
-      console.log('queryParams is instance of FindNearestMarketsDto');
+      // TODO queryParams is not an instance of FindNearestMarketsDto!!!
+      // @see https://github.com/risen228/nestjs-zod/issues/52
     }
     const markets = await this.markets.findMany(queryParams);
     return markets.map(GetMarketDto.fromEntity);
@@ -90,10 +94,11 @@ export class MarketsController {
     return this.markets.remove(id);
   }
 
-  @Post('upload')
+  @Post(':id/image-upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(
-    @Body() dto: UploadMarketImageDto,
+  async uploadImage(
+    @Param() params: UploadMarketImageParamDto,
+    @Body() body: UploadMarketImageBodyDto,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -104,12 +109,12 @@ export class MarketsController {
     )
     file: Express.Multer.File,
   ) {
-    const market = await this.markets.findOne(dto.marketId);
+    const market = await this.markets.findOne(params.id);
     if (!market) throw new NotFoundException('Market not found');
     const updatedMarket = await this.markets.uploadImage(
       market,
       file,
-      dto.imageDescription,
+      body.imageDescription,
     );
     return GetMarketDto.fromEntity(updatedMarket);
   }
