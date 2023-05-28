@@ -2,15 +2,21 @@ import {
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
   HttpCode,
   HttpStatus,
+  MaxFileSizeValidator,
   NotFoundException,
   Param,
+  ParseFilePipe,
   Patch,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiExtraModels,
   ApiOkResponse,
@@ -22,7 +28,10 @@ import { CreateMarketDto } from './dto/create-market.dto';
 import { FindNearestMarketsDto } from './dto/find-nearest-markets.dto';
 import { GetMarketDto } from './dto/get-market.dto';
 import { UpdateMarketDto } from './dto/update-market.dto';
+import { UploadMarketImageDto } from './dto/upload-market-image.dto';
 import { MarketsService } from './markets.service';
+
+const oneMegabyteInBytes = 1024 * 1024;
 
 @Controller('markets')
 @ApiTags('Markets')
@@ -37,15 +46,6 @@ export class MarketsController {
 
   @Get()
   @ApiExtraModels(FindNearestMarketsDto)
-  // @ApiQuery({
-  //   name: 'lat',
-  //   type: Number,
-  //   description:
-  //     'Latitude of coordinate in which area you want to search. If provided, also long is required',
-  // })
-  // @ApiQuery({ name: 'long', type: Number })
-  // @ApiQuery({ name: 'radiusinkm', type: Number, required: false })
-  // @ApiQuery({ name: 'limit', type: Number, required: false })
   @ApiQuery({
     required: true,
     name: 'queryParams',
@@ -88,5 +88,29 @@ export class MarketsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     return this.markets.remove(id);
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @Body() dto: UploadMarketImageDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10 * oneMegabyteInBytes }),
+          new FileTypeValidator({ fileType: 'image/jpeg' }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    const market = await this.markets.findOne(dto.marketId);
+    if (!market) throw new NotFoundException('Market not found');
+    const updatedMarket = await this.markets.uploadImage(
+      market,
+      file,
+      dto.imageDescription,
+    );
+    return GetMarketDto.fromEntity(updatedMarket);
   }
 }

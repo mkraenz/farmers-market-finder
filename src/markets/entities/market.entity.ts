@@ -1,4 +1,13 @@
-import { Column, Entity, Index, Point, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  Index,
+  Point,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { MarketExtraSchema } from './market.validator';
 
 @Entity()
 export class Market {
@@ -44,4 +53,16 @@ export class Market {
     nullable: true,
   })
   distance?: number | null;
+
+  @BeforeUpdate()
+  @BeforeInsert()
+  validateExtraData() {
+    const result = MarketExtraSchema.safeParse(this);
+    if (!result.success)
+      throw new Error(
+        `Invalid extra data in market entity. This is most likely a programming issue. Fix the code. zod error: ${JSON.stringify(
+          result.error,
+        )}`,
+      );
+  }
 }

@@ -53,8 +53,9 @@ Returns a list of markets within the radius sorted by distance from the user's l
 - [x] basic connection to S3 from nestjs
 - [x] upload image to S3 within server
 - [x] file upload endpoint to upload image to S3
-- [ ] store image urls in Market entity
-- [ ] users can get image urls from market
+- [x] store image urls in Market entity
+  - [ ] cleanup code incl move to `POST /markets/:id/image-upload`
+- [x] users can get image urls from market
 - [ ] (optional) redo everything using pre-signed URLs
 
 ## Migrations

@@ -23,3 +23,25 @@ Content-Type: image/jpeg
 
 < ./test/test.jpg
 --MfnBoundry--
+
+### Market Image upload
+
+POST http://localhost:3000/markets/upload HTTP/1.1
+Content-Type: multipart/form-data; boundary=MfnBoundry
+
+--MfnBoundry
+Content-Disposition: form-data; name="marketId"
+Content-Type: text/plain
+
+a460fe2d-cec3-4330-baf9-61f8f6229794
+--MfnBoundry
+Content-Disposition: form-data; name="imageDescription"
+Content-Type: text/plain
+
+Test image showing the number zero
+--MfnBoundry
+Content-Disposition: form-data; name="file"; filename="test2.jpg"
+Content-Type: image/jpeg
+
+< ./test/test.jpg
+--MfnBoundry--
