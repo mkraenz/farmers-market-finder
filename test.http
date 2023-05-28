@@ -13,6 +13,11 @@ POST http://localhost:3000/s3/upload HTTP/1.1
 Content-Type: multipart/form-data; boundary=MfnBoundry
 
 --MfnBoundry
+Content-Disposition: form-data; name="marketId"
+Content-Type: text/plain
+
+d1e02e0e-cc1b-46e0-9038-26df76cbd0f1
+--MfnBoundry
 Content-Disposition: form-data; name="file"; filename="test2.jpg"
 Content-Type: image/jpeg
 
