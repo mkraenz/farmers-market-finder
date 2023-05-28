@@ -15,6 +15,12 @@ export class Market {
   id!: string;
 
   @Column()
+  name!: string;
+
+  @Column()
+  teaser!: string;
+
+  @Column()
   address!: string;
 
   @Column()

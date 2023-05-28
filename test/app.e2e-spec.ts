@@ -27,6 +27,8 @@ describe('/markets/', () => {
   const markets = '/markets/';
   it('POST creates a new market and GET it', async () => {
     const reqBody: CreateMarketApiInput = {
+      name: "Sesame Street's Market POST test",
+      teaser: 'Fresh produce and artisanal apparel',
       address: 'Sesame Street 12',
       city: 'Philadelphia',
       country: 'US',
@@ -61,6 +63,8 @@ describe('/markets/', () => {
 
   it('DELETE deletes a market and validates it cannot be GET anymore', async () => {
     const reqBody: CreateMarketApiInput = {
+      name: "Sesame Street's Market DELETE test",
+      teaser: 'Fresh produce and artisanal apparel',
       address: 'Sesame Street 12',
       city: 'Philadelphia',
       country: 'US',
@@ -87,6 +91,8 @@ describe('/markets/', () => {
 
   it('PATCH updates a market', async () => {
     const reqBody: CreateMarketApiInput = {
+      name: "Sesame Street's Market PATCH test",
+      teaser: 'Fresh produce and artisanal apparel',
       address: 'Sesame Street 12',
       city: 'Philadelphia',
       country: 'US',
@@ -100,6 +106,8 @@ describe('/markets/', () => {
     };
 
     const updateBody: UpdateMarketApiInput = {
+      name: "Baker Street's Market PATCH test",
+      teaser: 'Find the best jewelry and accessories on our weekly market',
       address: 'Baker Street 221B',
       city: 'London',
       location: {
@@ -110,12 +118,12 @@ describe('/markets/', () => {
       products: ['Jewelry', 'Accessory'],
       state: 'AP',
       zip: '54321',
-      images: [
-        {
-          url: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-          description: 'Fruit Market',
-        },
-      ],
+      // images: [
+      //   {
+      //     url: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      //     description: 'Fruit Market',
+      //   },
+      // ],
     };
     const { body } = await request(app.getHttpServer())
       .post(markets)
@@ -133,6 +141,7 @@ describe('/markets/', () => {
       ...updateBody,
       id: expect.stringMatching(uuidv4),
       country: 'US',
+      images: [],
     });
   });
 });

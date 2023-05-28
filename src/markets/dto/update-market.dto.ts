@@ -2,6 +2,8 @@ import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
 
 const UpdateMarketSchema = z.object({
+  name: z.string().min(3).max(60).optional().describe('Name of the market'),
+  teaser: z.string().min(5).max(200).describe('Short description'),
   address: z.string().optional().describe('Street and house number'),
   city: z.string().optional().describe('City or Township'),
   state: z.string().optional().describe('Which state in the given country'),

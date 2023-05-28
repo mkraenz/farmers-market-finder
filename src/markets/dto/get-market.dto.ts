@@ -4,6 +4,8 @@ import { Market } from '../entities/market.entity';
 
 const schema = z.object({
   id: z.string(),
+  name: z.string(),
+  teaser: z.string(),
   address: z.string(),
   city: z.string(),
   state: z.string(),
