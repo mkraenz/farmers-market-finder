@@ -35,7 +35,8 @@ export class S3Controller {
     )
     file: Express.Multer.File,
   ) {
-    await this.svc.putImage(file.originalname, file.buffer);
-    return { message: 'File uploaded successfully' };
+    const timestampedFilename = `${Date.now()}-${file.originalname}`;
+    const imageData = await this.svc.putImage(timestampedFilename, file.buffer);
+    return { message: 'File uploaded successfully', url: imageData?.url };
   }
 }

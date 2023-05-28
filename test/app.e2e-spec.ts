@@ -46,6 +46,7 @@ describe('/markets/', () => {
     expect(body).toEqual({
       ...reqBody,
       id: expect.stringMatching(uuidv4),
+      images: [],
     });
 
     const { body: getBody } = await request(app.getHttpServer())
@@ -54,6 +55,7 @@ describe('/markets/', () => {
     expect(getBody).toEqual({
       ...reqBody,
       id: expect.stringMatching(uuidv4),
+      images: [],
     });
   });
 
@@ -108,6 +110,12 @@ describe('/markets/', () => {
       products: ['Jewelry', 'Accessory'],
       state: 'AP',
       zip: '54321',
+      images: [
+        {
+          url: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+          description: 'Fruit Market',
+        },
+      ],
     };
     const { body } = await request(app.getHttpServer())
       .post(markets)

@@ -25,20 +25,26 @@ Resources:
             AllowedMethods:
               - GET
             MaxAge: 3000
-      Tags: [{ Key: 'project', Value: 'Farmers Market Finder' }]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      Tags:
+        - Key: project
+          Value: farmers-market-finder
 
-  # BucketPolicy:
-  #   Type: AWS::S3::BucketPolicy
-  #   Properties:
-  #     Bucket: !Ref FileStorage
-  #     PolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #         - Sid: PublicReadGetObject
-  #           Effect: Allow
-  #           Principal: '*'
-  #           Action: s3:GetObject
-  #           Resource: !Sub 'arn:aws:s3:::${FileStorage}/*'
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FileStorage
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*' # all users on the internet including unauthenticated
+            Action: s3:GetObject
+            Resource: !Sub 'arn:aws:s3:::${FileStorage}/*'
 
   WriteToFileStorageUser:
     Type: AWS::IAM::User

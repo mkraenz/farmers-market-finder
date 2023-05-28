@@ -15,6 +15,9 @@ const schema = z.object({
   country: z.string(),
   products: z.array(z.string()),
   distance: z.number().optional().describe('Distance in kilometers'),
+  images: z
+    .array(z.object({ url: z.string(), description: z.string() }))
+    .optional(),
 });
 type Schema = z.infer<typeof schema>;
 

@@ -8,8 +8,8 @@ const UpdateMarketSchema = z.object({
   country: z.string().optional().describe('Which country'),
   location: z
     .object({
-      lat: z.number().min(-90).max(90).describe('latitude'),
-      long: z.number().min(-180).max(180).describe('longitude'),
+      lat: z.number().min(-90).max(90).describe('Latitude'),
+      long: z.number().min(-180).max(180).describe('Longitude'),
     })
     .optional()
     .transform((data) => {
@@ -20,7 +20,7 @@ const UpdateMarketSchema = z.object({
       };
     })
     .describe('GPS coordinates'),
-  zip: z.string().min(5).max(5).optional().describe('postal code'),
+  zip: z.string().min(5).max(5).optional().describe('Postal code'),
   products: z
     .array(z.string())
     .optional()
@@ -33,7 +33,16 @@ const UpdateMarketSchema = z.object({
         message: 'Must be an array of unique strings',
       },
     )
-    .describe('what products are typically offered here'),
+    .describe('What products are typically offered here'),
+  images: z
+    .array(
+      z.object({
+        url: z.string().url().describe('Storage URL to the image'),
+        description: z.string().describe('Description of the image'),
+      }),
+    )
+    .optional()
+    .describe('Images of the market'),
 });
 
 export class UpdateMarketDto extends createZodDto(UpdateMarketSchema) {}

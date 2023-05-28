@@ -9,6 +9,7 @@ const logger = new Logger('S3Service');
 export class S3Service {
   private client: S3.S3Client;
   private bucket: string;
+  private region: string;
 
   constructor(private cfg: ConfigService<Environment, true>) {
     // region: string, // credentials: { accessKeyId: string; secretAccessKey: string },
@@ -16,11 +17,11 @@ export class S3Service {
       accessKeyId: cfg.get('AWS_ACCESS_KEY_ID'),
       secretAccessKey: cfg.get('AWS_SECRET_ACCESS_KEY'),
     };
-    const region = cfg.get('AWS_REGION');
+    this.region = cfg.get('AWS_REGION');
     this.bucket = cfg.get('AWS_S3_BUCKET');
     this.client = new S3.S3Client({
       credentials,
-      region,
+      region: this.region,
     });
   }
 
@@ -46,9 +47,14 @@ export class S3Service {
         ContentType: 'image/jpeg',
       });
       const res = await this.client.send(command);
+      const region = this.region === 'us-east-1' ? '' : `-${this.region}`;
+      const url = `https://s3${region}.amazonaws.com/${this.bucket}/${key}`;
       logger.log(JSON.stringify(res, null, 2));
+      logger.log({ url, key });
+      return { url, key };
     } catch (error) {
       logger.error(error);
+      throw error;
     }
   }
 }

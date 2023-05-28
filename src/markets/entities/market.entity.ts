@@ -29,15 +29,10 @@ export class Market {
   @Column('text', { array: true, default: [] })
   products!: string[];
 
-  // distance?: number;
+  @Column('jsonb', { default: [] })
+  images!: { url: string; description: string; key: string }[];
 
-  // TODO somehow make this work https://pietrzakadrian.com/blog/virtual-column-solutions-for-typeorm
-  //
-  // .addSelect(
-  //   'ST_DistanceSphere(point, ST_MakePoint(:long, :lat))',
-  //   'distance',
-  // )
-  /**
+  /*
    * When querying the nearest markets for a given geo-coordinate,
    * this will be the distance in kilometers from the
    * given geo-coordinate. Typically not set otherwise. */
