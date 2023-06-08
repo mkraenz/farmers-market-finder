@@ -4,7 +4,7 @@ version: '3.1'
 services:
   db:
     image: postgis/postgis
-    restart: unless-stopped
+    restart: never
     env_file: ./.env
     ports:
       - 5432:5432
@@ -13,9 +13,9 @@ services:
 
   adminer:
     image: adminer
-    restart: unless-stopped
+    restart: never
     ports:
-      - 8081:8080
+      - 8082:8080
 
 volumes:
   postgres:
