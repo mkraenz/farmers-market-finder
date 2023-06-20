@@ -3,8 +3,6 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  Index,
-  Point,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { MarketExtraSchema } from './market.validator';
@@ -32,11 +30,11 @@ export class Market {
   @Column()
   country!: string;
 
-  @Column('geometry', {
-    spatialFeatureType: 'Point',
-  })
-  @Index({ spatial: true })
-  location!: Point;
+  @Column('jsonb')
+  location!: {
+    lat: number;
+    long: number;
+  };
 
   @Column()
   zip!: string;

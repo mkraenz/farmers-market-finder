@@ -14,13 +14,13 @@ const UpdateMarketSchema = z.object({
       long: z.number().min(-180).max(180).describe('Longitude'),
     })
     .optional()
-    .transform((data) => {
-      if (!data) return undefined;
-      return {
-        type: 'Point' as const,
-        coordinates: [data.long, data.lat],
-      };
-    })
+    // .transform((data) => {
+    //   if (!data) return undefined;
+    //   return {
+    //     type: 'Point' as const,
+    //     coordinates: [data.long, data.lat],
+    //   };
+    // })
     .describe('GPS coordinates'),
   zip: z.string().min(5).max(5).optional().describe('Postal code'),
   products: z

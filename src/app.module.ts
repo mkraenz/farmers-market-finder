@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
-import { ZodValidationPipe } from 'nestjs-zod';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
+import { AppController } from './app.controller';
 import { Environment } from './environment';
 import { MarketsModule } from './markets/markets.module';
-import { S3Module } from './s3/s3.module';
 
 const typeormConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -37,14 +35,14 @@ const typeormConfig: TypeOrmModuleAsyncOptions = {
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync(typeormConfig),
-    S3Module,
     MarketsModule,
   ],
+  controllers: [AppController],
   providers: [
-    {
-      provide: APP_PIPE,
-      useClass: ZodValidationPipe,
-    },
+    // {
+    //   provide: APP_PIPE,
+    //   useClass: ZodValidationPipe,
+    // },
   ],
 })
 export class AppModule {}

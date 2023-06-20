@@ -29,8 +29,8 @@ export class GetMarketDto extends createZodDto(schema) {
       ...entity,
       distance: entity.distance ?? undefined,
       location: {
-        lat: entity.location.coordinates[1],
-        long: entity.location.coordinates[0],
+        lat: entity.location.lat,
+        long: entity.location.long,
       },
     };
     const result = schema.safeParse(data);

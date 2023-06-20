@@ -94,28 +94,28 @@ export class MarketsController {
     return this.markets.remove(id);
   }
 
-  @Post(':id/image-upload')
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadImage(
-    @Param() params: UploadMarketImageParamDto,
-    @Body() body: UploadMarketImageBodyDto,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 10 * oneMegabyteInBytes }),
-          new FileTypeValidator({ fileType: 'image/jpeg' }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-  ) {
-    const market = await this.markets.findOne(params.id);
-    if (!market) throw new NotFoundException('Market not found');
-    const updatedMarket = await this.markets.uploadImage(
-      market,
-      file,
-      body.imageDescription,
-    );
-    return GetMarketDto.fromEntity(updatedMarket);
-  }
+  // @Post(':id/image-upload')
+  // @UseInterceptors(FileInterceptor('file'))
+  // async uploadImage(
+  //   @Param() params: UploadMarketImageParamDto,
+  //   @Body() body: UploadMarketImageBodyDto,
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [
+  //         new MaxFileSizeValidator({ maxSize: 10 * oneMegabyteInBytes }),
+  //         new FileTypeValidator({ fileType: 'image/jpeg' }),
+  //       ],
+  //     }),
+  //   )
+  //   file: Express.Multer.File,
+  // ) {
+  //   const market = await this.markets.findOne(params.id);
+  //   if (!market) throw new NotFoundException('Market not found');
+  //   const updatedMarket = await this.markets.uploadImage(
+  //     market,
+  //     file,
+  //     body.imageDescription,
+  //   );
+  //   return GetMarketDto.fromEntity(updatedMarket);
+  // }
 }

@@ -1,15 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { S3Service } from '../s3/s3.service';
 import { CreateMarketDto } from './dto/create-market.dto';
 import { UpdateMarketDto } from './dto/update-market.dto';
-import { Market } from './entities/market.entity';
 import { MarketRepository } from './markets.repository';
 
 @Injectable()
 export class MarketsService {
   constructor(
-    private markets: MarketRepository,
-    private readonly filestorage: S3Service,
+    private markets: MarketRepository, // private readonly filestorage: S3Service,
   ) {}
 
   async create(dto: CreateMarketDto) {
@@ -23,7 +20,7 @@ export class MarketsService {
     radiusInKm: number;
     limit: number;
   }) {
-    if (options) return this.markets.findNearby(options);
+    // if (options) return this.markets.findNearby(options);
     return this.markets.find();
   }
 
@@ -42,23 +39,23 @@ export class MarketsService {
     await this.markets.delete(id);
   }
 
-  async uploadImage(
-    market: Market,
-    image: Express.Multer.File,
-    imageDescription: string,
-  ) {
-    const timestampedFilename = `${Date.now()}-${image.originalname}`;
-    const imageData = await this.filestorage.putImage(
-      timestampedFilename,
-      image.buffer,
-    );
-    const update = {
-      images: [
-        ...market.images,
-        { ...imageData, description: imageDescription },
-      ],
-    } satisfies Partial<Market>;
-    const updatedMarket = this.markets.merge(market, update);
-    return this.markets.save(updatedMarket); // .save to trigger @BeforeUpdate hook for validation. See https://github.com/typeorm/typeorm/issues/5385
-  }
+  // async uploadImage(
+  //   market: Market,
+  //   image: Express.Multer.File,
+  //   imageDescription: string,
+  // ) {
+  //   const timestampedFilename = `${Date.now()}-${image.originalname}`;
+  //   const imageData = await this.filestorage.putImage(
+  //     timestampedFilename,
+  //     image.buffer,
+  //   );
+  //   const update = {
+  //     images: [
+  //       ...market.images,
+  //       { ...imageData, description: imageDescription },
+  //     ],
+  //   } satisfies Partial<Market>;
+  //   const updatedMarket = this.markets.merge(market, update);
+  //   return this.markets.save(updatedMarket); // .save to trigger @BeforeUpdate hook for validation. See https://github.com/typeorm/typeorm/issues/5385
+  // }
 }

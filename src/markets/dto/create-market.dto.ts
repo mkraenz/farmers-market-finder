@@ -13,10 +13,10 @@ const CreateMarketSchema = z.object({
       lat: z.number().min(-90).max(90).describe('Latitude'),
       long: z.number().min(-180).max(180).describe('Longitude'),
     })
-    .transform((data) => ({
-      type: 'Point' as const,
-      coordinates: [data.long, data.lat],
-    }))
+    // .transform((data) => ({
+    //   type: 'Point' as const,
+    //   coordinates: [data.long, data.lat],
+    // }))
     .describe('GPS coordinates'),
   zip: z.string().min(5).max(5).describe('Postal code'),
   products: z
