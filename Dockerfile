@@ -1,12 +1,23 @@
-FROM node:18
+### BUILD ###
+FROM node:18-alpine As build
 
-ENV NODE_ENV production
-# Note: for production use, we should use a multi-stage build to get rid of non-production dependencies and use a smaller base image
 WORKDIR /usr/src/app
-COPY package*.json ./
+COPY --chown=node:node package*.json ./
 RUN npm ci
-COPY . .
-# npm run build currently fails with sh: 1: nest: not found - somehow nest cli doesnt seem to be installed
+COPY --chown=node:node . .
 RUN npm run build
+ENV NODE_ENV production
+RUN npm prune --omit=dev && npm cache clean --force
+USER node
+
+### PRODUCTION ###
+
+FROM node:18-alpine As production
+
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
 CMD [ "node", "dist/src/main.js" ]
+
+# docker run --rm -p 3001:3333 -e PORT='3333' -e POSTGRES_HOST='172.17.0.1' -e POSTGRES_PORT=5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test --name nestjs-fargate-test test2:latest
+# docker run --rm -p 3001:3333 -e PORT='3333' -e POSTGRES_HOST='172.17.0.1' -e POSTGRES_PORT=5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test --name nestjs-fargate-test test2:latest npx typeorm-ts-node-commonjs -- -d ./src/ormconfig.ts
