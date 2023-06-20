@@ -199,6 +199,25 @@ const instanceRole = new aws.iam.Role('instance-role', {
   tags,
 });
 
+// preparation for environment secrets
+// const instanceRolePolicy = new aws.iam.Policy('instance-role-policy', {
+//   policy: {
+//     // copied from the app runner console -> create service -> .. continue -> IAM policy templates -> SSM Parameter Store
+//     "Statement": [
+//       {
+//         "Action": [
+//           "ssm:GetParameters"
+//         ],
+//         "Effect": "Allow",
+//         "Resource": [
+//           "arn:aws:ssm:us-east-1:756399734264:parameter/<parameter_name>"
+//         ]
+//       }
+//     ],
+//     "Version": "2012-10-17"
+//   }
+// })
+
 //   https://www.pulumi.com/registry/packages/aws/api-docs/apprunner/service/#servicesourceconfiguration
 const fmfService = new aws.apprunner.Service(
   'fmf-service',
@@ -218,6 +237,7 @@ const fmfService = new aws.apprunner.Service(
           runtimeEnvironmentVariables: {
             NODE_ENV: 'production',
             FMF_PORT: fmfServicePort.toString(),
+            NO_COLOR: 'enabled', // can be any non-empty value. see https://docs.nestjs.com/techniques/logger#:~:text=To%20disable%20color%20in%20the%20default%20logger%27s%20messages%2C%20set%20the%20NO_COLOR%20environment%20variable%20to%20some%20non%2Dempty%20string.
           },
         },
       },
