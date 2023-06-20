@@ -11,7 +11,7 @@ async function bootstrap() {
 
   patchNestJsSwagger();
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Market Finder API')
+    .setTitle('Farmers Market Finder API')
     .setDescription('Find local farmers market')
     .setVersion('1.0')
     .build();
@@ -19,7 +19,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   const cfg = app.get<ConfigService<Environment, true>>(ConfigService);
-  const port = cfg.get<number>('PORT') || 3000;
+  const port = cfg.get<number>('FMF_PORT') || 3000;
   await app.listen(port);
   new Logger('boostrap').log(`Running on port ${port}`);
 }

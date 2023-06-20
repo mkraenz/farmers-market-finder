@@ -1,3 +1,4 @@
+// FMF = Farmers Market Finder
 export type Environment = {
   POSTGRES_HOST: string;
   POSTGRES_PORT: number;
@@ -8,5 +9,5 @@ export type Environment = {
   AWS_SECRET_ACCESS_KEY: string;
   AWS_REGION: string;
   AWS_S3_BUCKET: string;
-  PORT: number;
+  FMF_PORT: number;
 };
