@@ -34,8 +34,8 @@ const typeormConfig: TypeOrmModuleAsyncOptions = {
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync(typeormConfig),
-    MarketsModule,
+    // TypeOrmModule.forRootAsync(typeormConfig),
+    // MarketsModule,
   ],
   controllers: [AppController],
   providers: [
