@@ -10,4 +10,5 @@ export type Environment = {
   AWS_REGION: string;
   AWS_S3_BUCKET: string;
   FMF_PORT: number;
+  NO_COLOR?: string; // if empty string or undefined, print logs with colors. any other value disables colors. Necessary for cloudwatch
 };
