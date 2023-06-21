@@ -26,11 +26,18 @@ const internetGateway = new aws.ec2.InternetGateway('ig', {
   tags,
 });
 
+// Hopefully this is deterministic, because even within the us-east-1 region, some availability zones don't support App Runner. Creating the vpc connector fails with "The Availability Zones associated with the following subnet(s) don't support App Runner services"
+const availabilityZones = aws.getAvailabilityZones({
+  state: 'available',
+});
 const publicSubnet = new aws.ec2.Subnet('publicSubnet', {
   vpcId: vpc.id,
   cidrBlock: '10.0.1.0/24',
   mapPublicIpOnLaunch: true, // not sure if this is needed. Maybe for the NAT gateway?
   tags,
+  availabilityZone: availabilityZones.then(
+    (availabilityZones) => availabilityZones.names[0],
+  ),
 });
 
 const natEip = new aws.ec2.Eip(
@@ -55,12 +62,14 @@ const natGateway = new aws.ec2.NatGateway(
     dependsOn: [internetGateway],
   },
 );
-
 const privateSubnet = new aws.ec2.Subnet('private-subnet', {
   vpcId: vpc.id,
   cidrBlock: '10.0.10.0/24',
   mapPublicIpOnLaunch: false,
   tags,
+  availabilityZone: availabilityZones.then(
+    (availabilityZones) => availabilityZones.names[0],
+  ),
 });
 
 const privateSubnetRouteTable = new aws.ec2.RouteTable('private-subnet-rt', {
@@ -182,41 +191,55 @@ const ecrAccessRolePolicyAttachment = new aws.iam.RolePolicyAttachment(
   },
 );
 
-const instanceRole = new aws.iam.Role('instance-role', {
-  // https://repost.aws/it/questions/QUhtLYW1B2T_SuGWSlDJVs3Q/guide-to-creating-an-instance-role-that-will-allow-my-app-runner-service-to-use-values-from-ssm-parameter-store
-  assumeRolePolicy: JSON.stringify({
-    Version: '2012-10-17',
-    Statement: [
-      {
-        Action: 'sts:AssumeRole',
-        Principal: {
-          Service: 'tasks.apprunner.amazonaws.com',
-        },
-        Effect: 'Allow',
-      },
-    ],
-  }),
-  tags,
-});
+// const instanceRole = new aws.iam.Role('instance-role', {
+//   // https://repost.aws/it/questions/QUhtLYW1B2T_SuGWSlDJVs3Q/guide-to-creating-an-instance-role-that-will-allow-my-app-runner-service-to-use-values-from-ssm-parameter-store
+//   assumeRolePolicy: JSON.stringify({
+//     Version: '2012-10-17',
+//     Statement: [
+//       {
+//         Action: 'sts:AssumeRole',
+//         Principal: {
+//           Service: 'tasks.apprunner.amazonaws.com',
+//         },
+//         Effect: 'Allow',
+//       },
+//     ],
+//   }),
+//   tags,
+// });
 
-// preparation for environment secrets
+// next step, use https://aws.amazon.com/blogs/aws/new-for-app-runner-vpc-support/ to connect to DB
+// preparation for environment secrets.
 // const instanceRolePolicy = new aws.iam.Policy('instance-role-policy', {
 //   policy: {
 //     // copied from the app runner console -> create service -> .. continue -> IAM policy templates -> SSM Parameter Store
-//     "Statement": [
+//     Statement: [
 //       {
-//         "Action": [
-//           "ssm:GetParameters"
+//         Action: ['ssm:GetParameters'],
+//         Effect: 'Allow',
+//         Resource: [
+//           'arn:aws:ssm:us-east-1:756399734264:parameter/<parameter_name>',
 //         ],
-//         "Effect": "Allow",
-//         "Resource": [
-//           "arn:aws:ssm:us-east-1:756399734264:parameter/<parameter_name>"
-//         ]
-//       }
+//       },
+//       {
+//         Effect: 'Allow',
+//         Action: ['rds-db:connect'],
+//         Resource: [
+//           // TODO set up RDS
+//           // 'arn:aws:rds-db:us-east-2:1234567890:dbuser:db-ABCDEFGHIJKL01234/db_user',
+//         ],
+//       },
 //     ],
-//     "Version": "2012-10-17"
-//   }
-// })
+//     Version: '2012-10-17',
+//   },
+// });
+// const instanceRolePolicyAttachment = new aws.iam.RolePolicyAttachment(
+//   'instance-role-policy-attachment',
+//   {
+//     policyArn: instanceRolePolicy.arn,
+//     role: instanceRole.name,
+//   },
+// );
 
 //   https://www.pulumi.com/registry/packages/aws/api-docs/apprunner/service/#servicesourceconfiguration
 const fmfService = new aws.apprunner.Service(
@@ -251,7 +274,7 @@ const fmfService = new aws.apprunner.Service(
     instanceConfiguration: {
       cpu: '0.25 vCPU',
       memory: '0.5 GB',
-      instanceRoleArn: instanceRole.arn,
+      // instanceRoleArn: instanceRole.arn,
     },
     //   autoScalingConfigurationArn: fmfAutoScalingConfig.arn,
     tags,
