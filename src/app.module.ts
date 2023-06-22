@@ -9,6 +9,7 @@ import { AppController } from './app.controller';
 import { Environment } from './environment';
 import { MarketsModule } from './markets/markets.module';
 
+// TODO: unite with ormconfig.ts file
 const typeormConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
   useFactory: (configService: ConfigService<Environment, true>) => {

@@ -22,8 +22,8 @@ ENV NODE_ENV production
 
 USER node
 
-# CMD npx typeorm migration:run --dataSource ./dist/src/ormconfig.js && node dist/src/main.js
-CMD ["node", "dist/src/main.js"]
+CMD npx typeorm migration:run --dataSource ./dist/src/ormconfig.js && node dist/src/main.js
+# CMD ["node", "dist/src/main.js"]
 
 # docker run --rm -p 3001:3333 -e FMF_PORT='3333' -e POSTGRES_HOST='172.17.0.1' -e POSTGRES_PORT=5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test --name nestjs-fargate-test test2:latest
 # docker run --rm -p 3001:3333 -e FMF_PORT='3333' -e POSTGRES_HOST='172.17.0.1' -e POSTGRES_PORT=5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test --name nestjs-fargate-test test2:latest npx typeorm-ts-node-commonjs -- -d ./src/ormconfig.ts
