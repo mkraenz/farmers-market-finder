@@ -335,9 +335,9 @@ const fmfService = new aws.apprunner.Service(
             NODE_ENV: 'production',
             FMF_PORT: fmfServicePort.toString(),
             NO_COLOR: 'enabled', // can be any non-empty value. see https://docs.nestjs.com/techniques/logger#:~:text=To%20disable%20color%20in%20the%20default%20logger%27s%20messages%2C%20set%20the%20NO_COLOR%20environment%20variable%20to%20some%20non%2Dempty%20string.
-            POSTGRES_HOST: rdsInstance.endpoint,
+            POSTGRES_HOST: rdsInstance.endpoint.apply((e) => e.split(':')[0]), // remove the port from the endpoint
             POSTGRES_PORT: rdsInstance.port.apply((p) => p.toString()),
-            POSTGRES_DB: rdsInstance.dbName,
+            POSTGRES_DB: rdsInstance.dbName, // how to get the db name https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html
           },
         },
       },
