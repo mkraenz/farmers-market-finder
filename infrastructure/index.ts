@@ -189,6 +189,7 @@ const rdsUsername = 'postgres';
 //   },
 // );
 const rdsInstance = new aws.rds.Instance('rds-instance', {
+  skipFinalSnapshot: true, // TODO: this should be false in production
   allocatedStorage: 5,
   engine: 'postgres',
   engineVersion: '14.8',
