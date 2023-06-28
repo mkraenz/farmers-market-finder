@@ -1,2 +1,7 @@
 config:
+  auth0:client_id:
+    secure: AAABAGUpLHfxy0Hcvam1AgoxVIVVXyA49tbY4P6wq3k5R9TnVyJOcAhveCS7ov69C7iayAn+zozmMyeQ7hKbkQ==
+  auth0:client_secret:
+    secure: AAABALYhYDy6CHmfw16hL3tkWdBEF6Gvo4z2oTMVqoFXI21Mbs2Xjq79C4yoSGaVQkFmGIHcYtLyczOdrnqTaElp8UA6V5N0l30RgU0h/6V/qI6UnTt1F/oJ73hOP4Um
+  auth0:domain: dev-xs3s7x1ddlcr6zwk.us.auth0.com
   aws:region: us-east-1

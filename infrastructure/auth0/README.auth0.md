@@ -47,4 +47,17 @@ curl -H $AUTHZ_HEADER $AUTH0_BASE_URL/api/v2/clients | jq
 CLIENT_ID=$(curl -H $AUTHZ_HEADER -X POST -H "Content-Type: application/json" -d @./create-client.json $AUTH0_BASE_URL/api/v2/clients | jq .client_id)
 echo $CLIENT_ID
 
+CLIENT_ID=FPK2pp0qEEGRB4YD1dM5sAaKXSsitU6G
+
+### Ref set organization_require_behavior to post_login_prompt
+curl --request PATCH \
+  --url "$AUTH0_BASE_URL/api/v2/clients/$CLIENT_ID" \
+  --header $AUTHZ_HEADER \
+  --header 'cache-control: no-cache' \
+  --header 'content-type: application/json' \
+  --data '{ "organization_usage": "allow", "organization_require_behavior": "post_login_prompt" }'
+
+### Get default theme
+### MANUALLY set any property in the UI for default to get created: Branding -> Universal Login -> Customization Options, e.g. border width. Otherwise this will return theme_not_found). In the UI you can 'discard' -> 'Reset to defaults' the changes to delete the default theme.
+curl --header $AUTHZ_HEADER $AUTH0_BASE_URL/api/v2/branding/themes/default
 ```
