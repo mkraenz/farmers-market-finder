@@ -5,6 +5,7 @@ import * as pulumi from '@pulumi/pulumi';
  * Guide terraformify Auth0 https://auth0.com/blog/use-terraform-to-manage-your-auth0-configuration/
  */
 
+// ################## Config and general ##################
 const config = new pulumi.Config();
 const auth0Config = new pulumi.Config('auth0');
 const auth0Domain = auth0Config.require('domain');
@@ -14,10 +15,12 @@ const logoUri = 'https://avatars.githubusercontent.com/u/8503034?v=4';
 // const sendgridFromAddress = config.require('sendgridFromAddress');
 const sendgridApiKey = 'fake-key';
 const sendgridFromAddress = 'hello@example.com';
+const customDomainName = config.get('customDomainName');
 
 export const oauth2Issuer = pulumi.interpolate`https://${auth0Domain}/`;
 export const oauth2OpenIdConfigurationUrl = pulumi.interpolate`https://${auth0Domain}/.well-known/openid-configuration`;
 
+// ################## Client Applications ##################
 const client = new auth0.Client('WebApp', {
   name: 'My First Custom Application',
   description: 'Used by the web appp',
@@ -44,6 +47,7 @@ const clientCredentials = new auth0.ClientCredentials('webapp-credentials', {
   authenticationMethod: 'none', // SPAs are public clients
 });
 
+// ################## Connections ##################
 const connection = new auth0.Connection('user-db-connection', {
   name: 'user-db',
   strategy: 'auth0', // = Auth0-managed database
@@ -65,6 +69,7 @@ new auth0.ConnectionClients('user-db-connection-clients', {
 
 export const clientId = client.clientId;
 
+// ################## Resource Server (aka APIs) and Permission scopes ##################
 const api = new auth0.ResourceServer(
   'api',
   {
@@ -94,6 +99,7 @@ const apiPermissions = new auth0.ResourceServerScopes('api-scopes', {
   ],
 });
 
+// ################## Roles and Permissions ##################
 const adminRole = new auth0.Role(
   'admin-role',
   {
@@ -147,6 +153,7 @@ const enduserPermissions = new auth0.RolePermissions(
 export const enduserRoleId = enduserRole.id;
 export const enduserRoleName = enduserRole.name;
 
+// ################## Test organization ##################
 const testOrganization = new auth0.Organization('test-org', {
   name: 'test-organization',
   displayName: 'Amazing Test Organization',
@@ -161,6 +168,8 @@ const testOrganizationConnection = new auth0.OrganizationConnection(
     organizationId: testOrganization.id,
   },
 );
+
+// ################## BRANDING AND CUSTOMIZATION ##################
 const branding = new auth0.Branding('branding', {
   colors: {
     primary: '#1f6830',
@@ -204,6 +213,53 @@ new auth0.BrandingTheme('branding-theme', {
   widget: {},
 });
 
+// to get a complete list of what prompts are available and what translations keys the selected prompt support, visit https://manage.auth0.com/dashboard/<region>/<your auth0 tenant>/custom_text (in UI -> Branding -> Universal Login -> Advanced Options -> Custom Text -> select Prompt -> Raw JSON)
+const loginPromptCustomTexts = new auth0.PromptCustomText(
+  'login-prompt-custom-texts',
+  {
+    prompt: 'login',
+    language: 'en',
+    body: JSON.stringify({
+      login: {
+        alertListTitle: 'Alerts',
+        buttonText: 'Continue',
+        description: 'Login to',
+        editEmailText: 'Edit',
+        emailPlaceholder: 'Email address',
+        federatedConnectionButtonText: 'Continue with ${connectionName}',
+        footerLinkText: 'Sign up',
+        footerText: "Don't have an account?",
+        forgotPasswordText: 'Forgot password?',
+        invitationDescription:
+          "Log in to accept ${inviterName}'s invitation to join ${companyName} on ${clientName}.",
+        invitationTitle: "You've Been Invited!",
+        logoAltText: '${companyName}',
+        pageTitle: 'Log in | ${clientName}',
+        passwordPlaceholder: 'Password',
+        separatorText: 'Or',
+        signupActionLinkText: '${footerLinkText}',
+        signupActionText: '${footerText}',
+        title: 'Welcome',
+        usernamePlaceholder: 'Username or email address',
+      },
+    }),
+  },
+);
+const signupPromptCustomTexts = new auth0.PromptCustomText(
+  'signup-prompt-custom-texts',
+  {
+    prompt: 'signup',
+    language: 'en',
+    body: JSON.stringify({
+      signup: {
+        title: 'Greetings my friend',
+      },
+    }),
+  },
+);
+
+// ################## Email Provider ##################
+
 // https://www.pulumi.com/registry/packages/auth0/api-docs/email/
 const sendgridEmailProvider = new auth0.Email('sendgrid-email-provider', {
   name: 'sendgrid',
@@ -213,3 +269,12 @@ const sendgridEmailProvider = new auth0.Email('sendgrid-email-provider', {
   defaultFromAddress: sendgridFromAddress,
   enabled: true,
 });
+
+// ################## Custom Domain ##################
+
+if (customDomainName) {
+  const customDomain = new auth0.CustomDomain('custom-domain', {
+    domain: customDomainName,
+    type: 'auth0ManagedCerts',
+  });
+}
