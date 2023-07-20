@@ -7,7 +7,7 @@ env:
   TAG_SUFFIX: latest
   TAG_REPO: farmers-market-finder
   ECR_REGISTRY_BASE: 756399734264.dkr.ecr.us-east-1.amazonaws.com
-  ECR_REPOSITORY_SUFFIX: repo-75a8bf3
+  ECR_REPOSITORY_SUFFIX: repo-3c58070
 
 jobs:
   deploy:
