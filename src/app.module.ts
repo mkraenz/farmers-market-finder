@@ -8,6 +8,7 @@ import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { Environment } from './environment';
 import { MarketsModule } from './markets/markets.module';
+import { HealthModule } from './health/health.module';
 
 // TODO: unite with ormconfig.ts file
 const typeormConfig: TypeOrmModuleAsyncOptions = {
@@ -43,6 +44,7 @@ const typeormConfig: TypeOrmModuleAsyncOptions = {
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync(typeormConfig),
     MarketsModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [
