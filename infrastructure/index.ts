@@ -316,6 +316,10 @@ const fmfService = new aws.apprunner.Service(
   'fmf-service',
   {
     serviceName: 'farmers-market-finder',
+    healthCheckConfiguration: {
+      protocol: 'HTTP',
+      path: '/health',
+    },
     sourceConfiguration: {
       // autoDeploymentsEnabled: false, // we want to start deployments from CICD with a step in between. Or maybe not?
       authenticationConfiguration: {
