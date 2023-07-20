@@ -373,6 +373,7 @@ const fmfService = new aws.apprunner.Service(
       privateNatGatewayRoute2,
       instanceRolePolicyAttachment,
     ],
+    deleteBeforeReplace: true,
   },
 );
 
