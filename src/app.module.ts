@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
-import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { Environment } from './environment';
-import { MarketsModule } from './markets/markets.module';
 
 // TODO: unite with ormconfig.ts file
 const typeormConfig: TypeOrmModuleAsyncOptions = {
@@ -41,8 +40,8 @@ const typeormConfig: TypeOrmModuleAsyncOptions = {
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync(typeormConfig),
-    MarketsModule,
+    // TypeOrmModule.forRootAsync(typeormConfig),
+    // MarketsModule,
   ],
   controllers: [AppController],
   providers: [
